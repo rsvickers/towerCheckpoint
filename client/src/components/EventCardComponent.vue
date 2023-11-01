@@ -1,7 +1,10 @@
 <template>
- <div>
-  <!-- NOTE do the router link after making the details page:) -->
+ <div class="m-4 coolBg">
+  <!-- NOTE do the router link after making the details page:) and later on make this a background img -->
     <img class="img-fluid" :src="eventProp.coverImg" alt="">
+    <p class="p-1"><b>{{ eventProp.name }}</b></p>
+    <p class="p-1">{{ eventProp.location }}</p>
+    <p class="p-1">@ {{ eventProp.startDate.toLocaleString() }}</p>
  </div>
 </template>
 
@@ -21,5 +24,12 @@ export default {
 
 
 <style lang="scss" scoped>
+p {
+  margin-bottom: 0;
+}
 
+.coolBg {
+  background-color: rgba(0, 63, 0, 0.649);
+  color: white;
+}
 </style>
