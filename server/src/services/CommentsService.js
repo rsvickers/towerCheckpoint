@@ -27,9 +27,9 @@ class CommentsService {
             throw new BadRequest('NO COMMENT TO DELETE')
         }
 
-        // if (comment.accountId.toString() != userId) {
-        //     throw new Forbidden('NOT YOUR DATA')
-        // }
+        if (comment.creatorId.toString() != userId) {
+            throw new Forbidden('NOT YOUR DATA')
+        }
 
         await comment.delete()
         return "COMMENT DELETED"

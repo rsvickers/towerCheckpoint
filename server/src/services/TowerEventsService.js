@@ -21,6 +21,7 @@ class TowerEventsService {
     }
     async editEvent(eventId, eventData, userId) {
         const toBeEdited = await this.getEventById(eventId)
+        const event = await this.getEventById(eventId)
         if (toBeEdited.creatorId.toString() != userId) {
             throw new Forbidden('Not yours to edit')
         }
@@ -33,6 +34,9 @@ class TowerEventsService {
         // toBeEdited.isCanceled = eventData.isCanceled || toBeEdited.isCanceled
         toBeEdited.type = eventData.type || toBeEdited.type
 
+        if (event.creatorId.toString() != userId) {
+            throw new BadRequest('NOT YOUR EVENT TO CANCEL')
+        }
         toBeEdited.save()
         return toBeEdited
     }
@@ -40,7 +44,7 @@ class TowerEventsService {
     async cancelEvent(eventId, userId) {
         const event = await this.getEventById(eventId)
         if (event.creatorId.toString() != userId) {
-            throw new Forbidden('NOT YOUR EVENT TO CANCEL')
+            throw new BadRequest('NOT YOUR EVENT TO CANCEL')
         }
         event.isCanceled = !event.isCanceled
         await event.save()
