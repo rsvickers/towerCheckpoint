@@ -36,6 +36,16 @@ class TowerEventsService {
         return toBeEdited
     }
 
+    async cancelEvent(eventId, userId) {
+        const event = await this.getEventById(eventId)
+        if (event.creatorId.toString() != userId) {
+            throw new Forbidden('NOT YOUR EVENT TO CANCEL')
+        }
+        event.isCanceled = !event.isCanceled
+        await event.save()
+        return event
+
+    }
 }
 
 export const towerEventsService = new TowerEventsService()
