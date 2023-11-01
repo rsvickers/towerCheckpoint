@@ -3,11 +3,12 @@ import { BadRequest, Forbidden } from "../utils/Errors.js"
 
 class TowerEventsService {
     async getEvents(query) {
-        const events = await dbContext.TowerEvents.find(query).populate('creator', 'name picture')
+        const events = await dbContext.TowerEvents.find(query).populate('ticketCount')
         return events
     }
     async getEventById(eventId) {
-        const event = (await dbContext.TowerEvents.findById(eventId)).populate('creator', 'name picture')
+        const event = (await dbContext.TowerEvents.findById(eventId))
+            .populate('ticketCount')
         if (!event) {
             throw new BadRequest(`${eventId} is not a valid Id`)
         }
@@ -15,7 +16,7 @@ class TowerEventsService {
     }
     async createEvent(eventData) {
         const event = await dbContext.TowerEvents.create(eventData)
-        await event.populate('creator', 'name picture')
+        await event.populate('ticketCount')
         return event
     }
     async editEvent(eventId, eventData, userId) {

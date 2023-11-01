@@ -26,4 +26,9 @@ TowerEventSchema.virtual('creator', {
 })
 
 // TODO come back when ticket and comments are made
-// TowerEventSchema.virtual
+TowerEventSchema.virtual('ticketCount', {
+    localField: '_id',
+    foreignField: 'eventId',
+    ref: 'Ticket',
+    count: true
+})
