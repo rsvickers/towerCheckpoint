@@ -5,8 +5,8 @@
   <main>
     <router-view />
   </main>
-   <footer class="bg-dark text-light">
-    Made with 💖 by CodeWorks
+   <footer>
+    Made by Rhys the 🧙‍♂️
   </footer>
 </template>
 
@@ -36,5 +36,7 @@ footer {
   display: grid;
   place-content: center;
   height: 32px;
+  background-color: rgba(0, 63, 0, 0.649);
+  color: white;
 }
 </style>
