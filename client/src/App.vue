@@ -5,15 +5,14 @@
   <main>
     <router-view />
   </main>
-   <footer>
-    Made by Rhys the 🧙‍♂️
-  </footer>
+   <EventModalComponent />
 </template>
 
 <script>
 import { computed } from 'vue'
 import { AppState } from './AppState'
 import Navbar from './components/Navbar.vue'
+import EventModalComponent from './components/EventModalComponent.vue'
 
 export default {
   setup() {
@@ -21,7 +20,7 @@ export default {
       appState: computed(() => AppState)
     }
   },
-  components: { Navbar }
+  components: { Navbar, EventModalComponent }
 }
 </script>
 <style lang="scss">
