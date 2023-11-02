@@ -1,8 +1,15 @@
 <template>
   <div class="container-fluid">
     <section class="row">
-      <div class="col-12">Will put stuff here later</div>
-      <div class="col-12">Will put navbar thingy here later</div>
+      <div class="col-12 ">
+        
+      </div>
+      <div class="col-12 p-4">
+        <div class="bg-secondary rounded-pill p-3 d-flex justify-content-around">
+          <button class="btn btn-outline-light" @click="changeType('')">All</button>
+          <button class="btn btn-outline-light" @click="changeType(types)" v-for="types in types" :key="types" >{{ types }}</button>
+        </div>
+      </div>
     </section>
     <section class="row">
 
@@ -14,7 +21,7 @@
 </template>
 
 <script>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import Pop from '../utils/Pop.js';
 import { eventsService } from '../services/EventsService'
 import { AppState } from '../AppState';
@@ -22,6 +29,8 @@ import EventCardComponent from '../components/EventCardComponent.vue';
 
 export default {
     setup() {
+      const types = ["concert", "convention", "sport", "digital"]
+      const filteredType = ref("")
         onMounted(() => {
             getEvents();
         });
@@ -34,9 +43,25 @@ export default {
             }
         }
         return {
+          types,
+          filteredType,
             // NOTE will change this computed later with the filter
-            events: computed(() => AppState.events)
+            events: computed(() => {
+              if (filteredType.value) {
+                return AppState.events.filter((event) => event.type == filteredType.value)
+              } else {
+                return AppState.events
+              }
+            }),
+
+
+
+            changeType(type) {
+              filteredType.value = type
+            },
         };
+
+
     },
     components: { EventCardComponent }
 }
@@ -53,13 +78,9 @@ export default {
   .home-card {
     width: 50vw;
 
-    >img {
-      height: 200px;
-      max-width: 200px;
-      width: 100%;
-      object-fit: contain;
-      object-position: center;
-    }
+   .myImg {
+    height: 25vh;
+   }
   }
 }
 </style>
