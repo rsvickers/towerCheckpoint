@@ -32,8 +32,17 @@
     </section>
         
     <div class="container">
-        <section class="row">
-            
+        <section class="row mt-5 coolBg">
+            <div>
+                <h5 class="text-light">What people are saying</h5>
+            </div>
+            <div>
+                
+            </div>
+            <div v-for="comment in comments" :key="comment.id" class="col-12 d-flex justify-content-evenly align-items-center ">
+                <img class="rounded-circle avatar p-3" :src="comment.creator.picture" alt="">
+                <p class="bg-secondary text-light">{{ comment.body }}</p>
+            </div>
         </section>
     </div>    
     
@@ -49,6 +58,7 @@ import Pop from '../utils/Pop.js';
 import { computed, onMounted } from 'vue';
 
 import { AppState } from '../AppState';
+import { commentsService } from '../services/CommentsService.js';
 // import { computed, reactive, onMounted } from 'vue';
 export default {
     setup(){
@@ -57,6 +67,7 @@ export default {
         onMounted(() => {
             getEventById();
             getTicketsOnEvent();
+            getCommentsByEventId();
         })
 
         async function getEventById() {
@@ -77,6 +88,14 @@ export default {
             }
         }
 
+        async function getCommentsByEventId(){
+            try {
+                const eventId = route.params.eventId
+                await commentsService.getCommentsByEventId(eventId)  
+            } catch (error) {
+                Pop.error(error)
+            }
+        }
 
     return {
         route,
