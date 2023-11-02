@@ -91,7 +91,7 @@ export default {
         types, 
         editable,
 
-
+        
         async createEvent() {
           try {
           const eventData = editable.value
@@ -104,6 +104,7 @@ export default {
             Pop.error(error)
           }
         }
+
      }
     }
 };

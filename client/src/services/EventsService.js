@@ -25,14 +25,14 @@ class EventsService {
         AppState.events.push(newEvent)
         return newEvent
     }
+
+    async removeEvent(eventId) {
+        const res = await api.delete(`api/events/${eventId}`)
+        logger.log('removing event', res.data)
+        AppState.events = AppState.events.filter((event) => event.id != eventId)
+    }
 }
 
 
-// async createAlbum(albumData) {
-//     const res = await api.post(`api/albums`, albumData);
-//     logger.log("[ALBUMS SERVICE] createAlbum => res.data:", res.data);
-//     const newAlbum = new Album(res.data);
-//     AppState.albums.push(newAlbum);
-//     return newAlbum;
-//   }
+
 export const eventsService = new EventsService()

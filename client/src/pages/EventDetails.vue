@@ -18,23 +18,24 @@
                 <p class="">{{ event.description }}</p>
             </div>
             <div class="d-flex justify-content-between">
-                <p ><b>{{ event.capacity }}</b> Tickets Left</p>
+                <p ><b>{{ event.capacity }} </b> Tickets Left</p>
                 <button @click="getTicketForEvent()" class="btn btn-warning">Grab a Ticket! <i class="mdi mdi-ticket"></i> </button>
             </div>
         </div>          
     </section>
 
-    <section class="row mt-4 ">
-        <p>See who is attending</p>
-        <div v-for="ticket in tickets" :key="ticket.id" class="col-md-1 col-6">
-            <div>
-                <!-- {{ ticket }} -->
-                <img class="img-fluid rounded-circle" :title="ticket.profile.name" :src="ticket.profile.picture" alt="">
-            </div>
+    <section class="row mt-4 bg-secondary">
+        <h5 class="p-2 text-light">See who is attending</h5>
+        <div  v-for="ticket in tickets" :key="ticket.id" class=" col-md-1 col-6">
+                <img class="avatar rounded-circle" :title="ticket.profile.name" :src="ticket.profile.picture" alt="">
         </div>
     </section>
         
-        
+    <div class="container">
+        <section class="row">
+            
+        </section>
+    </div>    
     
    </div>
 </template>
@@ -115,5 +116,10 @@ export default {
 }
 .coolBg{
     background-color: rgba(1, 1, 85, 0.54);
+}
+
+.avatar {
+    height: 10vh;
+    width: 10vh;
 }
 </style>
