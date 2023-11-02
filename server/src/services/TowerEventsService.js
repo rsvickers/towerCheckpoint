@@ -34,7 +34,7 @@ class TowerEventsService {
         // toBeEdited.isCanceled = eventData.isCanceled || toBeEdited.isCanceled
         toBeEdited.type = eventData.type || toBeEdited.type
 
-        if (event.creatorId.toString() != userId) {
+        if (event.isCanceled) {
             throw new BadRequest('NOT YOUR EVENT TO CANCEL')
         }
         toBeEdited.save()
