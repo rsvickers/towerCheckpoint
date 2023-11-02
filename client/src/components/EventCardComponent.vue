@@ -1,7 +1,9 @@
 <template>
  <div class="m-4 coolBg">
   <!-- NOTE do the router link after making the details page:) and later on make this a background img -->
+  <router-link :to="{name: 'Event', params: {eventId: eventProp.id}}" >
     <img class="img-fluid" :src="eventProp.coverImg" alt="">
+  </router-link>
     <p class="p-1"><b>{{ eventProp.name }}</b></p>
     <p class="p-1">{{ eventProp.location }}</p>
     <p class="p-1">@ {{ eventProp.startDate.toLocaleString() }}</p>

@@ -25,31 +25,47 @@
             
 
             <!-- TODO finish this please -->
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label class="control-label" for="startDate">Start Date</label>
                 <input class="form-control" id="startDate" name="date" placeholder="MM/DD/YYY" type="text"/>
+            </div> -->
+            
+            <div class="mb-3">
+                <label for="capacity" class="form-label">Capacity</label>
+                <input v-model="editable.capacity" class="form-control"  placeholder="capacity..." id="capacity" max="5000"/> 
             </div>
             
             <div class="mb-3">
-                <label class="form-label" for="type">Type of Event</label>
-                <select for="type" class="form-select">
-                    <option :value="type" v-for="type in types" :key="type">
-                        {{ type }}
-                    </option>
+                <label for="startDate" class="form-label">Start Date</label>
+                <input v-model="editable.startDate" class="form-control"  placeholder="capacity..." type="date" min="2000-01-01" id="startDate" /> 
+                <!-- <input v-model="editable.startDate" class="form-control"  placeholder="capacity..." type="time" id="startDate" />  -->
+            </div>
+
+            <!-- class="form-control" type="date" min="1995-06-16" name="date-picker" id="date-picker" -->
+
+            <div class="mb-3">
+                <label for="type" class="form-label">Type of Event</label>
+                <select v-model="editable.type" class="form-select" name="" id="">
+                <option v-for="types in types" :key="types.id" :value="types">
+                {{ types }}
+                </option>
                 </select>
             </div>
             
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
-                <textarea class="form-control"  placeholder="Event details..." id="description" maxlength="500" rows="3"></textarea>
+                <textarea v-model="editable.description" class="form-control"  placeholder="Event details..." id="description" maxlength="500" rows="3"></textarea>
             </div>
 
 
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-success">Create</button>
+            </div>
+
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-success">Create</button>
       </div>
     </div>
   </div>
@@ -62,13 +78,14 @@ import { ref } from 'vue';
 import { Modal } from "bootstrap";
 import { eventsService } from '../services/EventsService.js';
 import Pop from '../utils/Pop';
-
+import { useRouter } from "vue-router";
 // import { AppState } from '../AppState';
 // import { computed, reactive, onMounted } from 'vue';
 export default {
     setup(){
         const editable = ref({})
         const types = ["concert", "convention", "sport", "digital"]
+        const router = useRouter()
         // const router = useRouter()
     return { 
         types, 
@@ -77,12 +94,12 @@ export default {
 
         async createEvent() {
           try {
-            const eventData = editable.value
-            const event = await eventsService.createEvent(eventData)
-            Pop.success('Created Event!')
-            editable.value = {};
-            // Modal.getOrCreateInstance(#createEventModal).hide()
-            // router.push({ name: "Event", params: { eventId: eventId} })
+          const eventData = editable.value
+          const event = await eventsService.createEvent(eventData)
+          Pop.success('Created Event')
+          editable.value = {}
+          Modal.getOrCreateInstance('#createEventModal').hide()
+        router.push({ name: 'Event', params: {eventId: event.id}})
           } catch (error) {
             Pop.error(error)
           }
