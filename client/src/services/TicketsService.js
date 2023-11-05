@@ -11,6 +11,12 @@ class TicketsService {
         logger.log('get ticket', res.data)
         AppState.tickets.push(new Ticket(res.data))
     }
+
+    async getTicketByUserId() {
+        const res = await api.get('account/tickets')
+        logger.log('got my ticket', res.data)
+        AppState.tickets = res.data.map((pojo) => new Ticket(pojo))
+    }
  async getTicketsOnEvent(eventId) {
     const res = await api.get(`api/events/${eventId}/tickets`)
     logger.log('tickets Service, getting tickets hopefully', res.data)

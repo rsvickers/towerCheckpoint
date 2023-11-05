@@ -4,7 +4,7 @@ export const CommentSchema = new Schema(
     {
         creatorId: { type: Schema.Types.ObjectId, ref: 'Account', required: true },
         eventId: { type: Schema.Types.ObjectId, required: true, ref: 'TowerEvent' },
-        body: { type: String, required: true, maxLength: 1000 },
+        body: { type: String, required: true, maxLength: 10000 },
         // isAttending: { type: Boolean, }
     },
     {

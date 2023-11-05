@@ -1,13 +1,17 @@
 <template>
-   <div class="container-fluid">
+   <div  class="container-fluid">
     
     <section v-if="event" class="coolBg row mt-4">
+        
         <div v-if="event.creatorId == account.id" class="col-12 text-end p-3">
             <button @click="cancelEvent()" class="btn btn-danger">Cancel Event</button>
         </div>
-        <div  class="col-4 p-4">
+        <div v-if="!event.isCanceled" class="col-4 p-4">
             <!-- TODO work on disabling if canceled -->
-            <img :disabled="event.isCanceled == true" class="cover-img" :src="event.coverImg" alt="">
+            <img  class="cover-img" :src="event.coverImg" alt="">
+        </div>
+        <div v-else>
+            <img class="img-fluid" src="https://media.istockphoto.com/id/1227115202/photo/a-red-stamp-on-a-white-background-cancelled.webp?b=1&s=170667a&w=0&k=20&c=RPueqU4VVfs98bOCqlCPifC7EcKze6CksprK4o_K3no="  >
         </div>
         <div class="col-8 p-4">
         <div class="d-flex justify-content-between">
@@ -21,27 +25,54 @@
             <div class="mt-4">
                 <p class="">{{ event.description }}</p>
             </div>
-            <div class="d-flex justify-content-between">
-                <p ><b>{{ event.capacity }} </b> Tickets Left</p>
-                <button @click="getTicketForEvent()" class="btn btn-warning">Grab a Ticket! <i class="mdi mdi-ticket"></i> </button>
+            <div v-if="ticketsLeft(event)" class="d-flex justify-content-between">
+                <p ><b>   {{ event.capacity - event.ticketCount  }} </b> Tickets Left</p>
+                
+                <button :disabled="buttonDisabled(event, account)" @click="getTicketForEvent()" class="btn btn-warning">Grab a Ticket! <i class="mdi mdi-ticket"></i> </button>
+                
             </div>
+            <div v-else>
+                <h4 class="text-end">Tickets are sold out</h4>
+            </div>
+            <p class="text-success text-end p-1" v-if="isAttending">You are attending this event!</p>
         </div>          
     </section>
 
     <section class="row mt-4 bg-secondary">
         <h5 class="p-2 text-light">See who is attending</h5>
-        <div  v-for="ticket in tickets" :key="ticket.id" class=" col-md-1 col-6 p-3">
+        <div  v-for="ticket in tickets" :key="ticket.id" class="col-md-1 col-6 p-3">
                 <img class="avatar rounded-circle" :title="ticket.profile.name" :src="ticket.profile.picture" alt="">
+               
         </div>
     </section>
         
     <div class="container">
-        <section class="row mt-5 coolBg">
-            <div>
-                <h5 class="text-light">What people are saying</h5>
+     
+        <section class="row mt-5  coolBg">
+            <form @submit.prevent="createComment()">
+        <div class="mb-3">
+            <label for="body" class="form-label text-light">Join the conversation</label>
+                <textarea v-model="editable.body" class="form-control"  placeholder="Tell the people..." id="description" maxlength="200" rows="3"></textarea>
             </div>
-            <div>
-                <CommentComponent :comment="comment" />
+            <div class="text-end">
+                <button type="submit" class="btn btn-success mb-4">post comment</button>
+            </div>
+        </form>
+            <div v-for="comment in comments" :key="comment.id" class="col-12 bg-secondary d-flex justify-content-evenly align-items-center mb-5">
+                <img class="rounded-circle avatar p-3" :src="comment.creator.picture" :title="comment.creator.name" alt="">
+                <div class="text-light  p-3 ">
+                    <h5>{{ comment.creator.name }}</h5>
+                    <p>{{ comment.body }}</p>
+                </div >
+                <div v-if="comment.creatorId == account.id" >
+                    <button @click="deleteComment(comment.id)" class="btn btn-danger" title="delete comment">🗑️</button>
+                </div>
+            </div>
+
+
+            
+            <!-- <div>
+                <h5 class="text-light">What people are saying</h5>
             </div>
             <div v-for="comment in comments" :key="comment.id" class="col-12 bg-secondary d-flex justify-content-evenly align-items-center mb-5">
                 <img class="rounded-circle avatar p-3" :src="comment.creator.picture" :title="comment.creator.name" alt="">
@@ -52,28 +83,27 @@
                 <div v-if="comment.creatorId == account.id" >
                     <button @click="deleteComment()" class="btn btn-danger" title="delete comment">🗑️</button>
                 </div>
-            </div>
+            </div> -->
         </section>
-    </div>    
-    
-    
-
+    </div>
    </div>
 </template>
 
 
 <script>
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { eventsService } from '../services/EventsService.js';
 import { ticketsService } from '../services/TicketsService.js'
 import Pop from '../utils/Pop.js';
 import { computed, onMounted } from 'vue';
-
+import { logger } from "../utils/Logger.js";
 import { AppState } from '../AppState';
 import { commentsService } from '../services/CommentsService.js';
 import CommentComponent from '../components/CommentComponent.vue';
 export default {
     setup() {
+        const editable = ref({})
         const route = useRoute();
         const router = useRouter();
         onMounted(() => {
@@ -109,6 +139,7 @@ export default {
             }
         }
         return {
+            editable,
             route,
             event: computed(() => AppState.activeEvent),
             comments: computed(() => AppState.comments),
@@ -116,26 +147,42 @@ export default {
             account: computed(() => AppState.account),
             tickets: computed(() => AppState.tickets),
             isAttending: computed(() => AppState.tickets.find((ticket) => ticket.accountId == AppState.account.id)),
-            isCanceled: computed(() => AppState.events.find((event) => event.accountId == AppState.account.id)),
+            // isCanceled: computed(() => AppState.events.find((event) => event.creatorId == AppState.event.id)),
            
             async getTicketForEvent() {
                 try {
                     const eventId = route.params.eventId;
                     await ticketsService.getTicketForEvent(eventId);
+                    route.params.tickets --
+                    getEventById()
+
                 }
                 catch (error) {
                     Pop.error(error);
                 }
             },
 
-            async deleteComment() {
+            async createComment() {
+          try {
+            const commentData = editable.value
+            // commentData.eventId = route.params.eventId
+            await commentsService.createComment(commentData)
+            Pop.success('Comment made!')
+            editable.value = {}
+          } catch (error) {
+            Pop.error(error)
+          }
+        },
+
+            async deleteComment(commentId) {
         try {
             const wantsToDelete = await Pop.confirm('Are you sure about that?')
             if (!wantsToDelete) {
                 return
             }
-            const commentId = route.params.commentId
+            
             await commentsService.deleteComment(commentId)
+            getCommentsByEventId(route.params.eventId)
             
         } catch (error) {
             Pop.error(error)
@@ -156,11 +203,22 @@ export default {
         } catch (error) {
             Pop.error(error)
         }
+    },
+
+    ticketsLeft(event){
+        return event.capacity - event.ticketCount > 0;
+    },
+
+    buttonDisabled(event, account){
+        logger.log(account)
+        return event.isCanceled 
     }
+
+
 
         };
     },
-    components: { CommentComponent }
+    // components: { CommentComponent }
 };
 </script>
 

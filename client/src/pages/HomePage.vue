@@ -5,16 +5,16 @@
         
       </div>
       <div class="col-12 p-4">
-        <div class="bg-secondary rounded-pill p-3 d-flex justify-content-around">
-          <button class="btn btn-outline-light" @click="changeType('')">All</button>
-          <button class="btn btn-outline-light" @click="changeType(types)" v-for="types in types" :key="types" >{{ types }}</button>
+        <div class="p-3 d-flex justify-content-start">
+          <button class="btn btn-secondary mx-1" @click="changeType('')">All</button>
+          <button class="btn btn-secondary mx-1" @click="changeType(types)" v-for="types in types" :key="types" >{{ types }}</button>
         </div>
       </div>
     </section>
     <section class="row">
 
       <div v-for="event in events" :key="event.id" class="col-md-3 col-12">
-        <EventCardComponent :eventProp="event" />
+        <EventCardComponent :eventProp="event"/>
       </div>
     </section>
   </div>

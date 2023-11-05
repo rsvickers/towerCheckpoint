@@ -1,5 +1,13 @@
 <template>
- <div :disabled="eventProp.isCanceled == true" class="m-4 coolBg">
+  <div v-if="eventProp.capacity - eventProp.ticketCount === 0 && !eventProp.isCanceled">
+  <router-link :to="{name: 'Event', params: {eventId: eventProp.id}}" >
+    <h1>Event is at capacity</h1>
+  </router-link>
+    <p class="p-1"><b>{{ eventProp.name }}</b></p>
+    <p class="p-1">{{ eventProp.location }}</p>
+    <p class="p-1">@ {{ eventProp.startDate.toLocaleString() }}</p>
+</div>
+ <div v-else-if="!eventProp.isCanceled" class="m-4 coolBg">
   <!-- NOTE do the router link after making the details page:) and later on make this a background img -->
   <router-link :to="{name: 'Event', params: {eventId: eventProp.id}}" >
     <img class="img-fluid" :src="eventProp.coverImg" alt="">
@@ -7,10 +15,22 @@
     <p class="p-1"><b>{{ eventProp.name }}</b></p>
     <p class="p-1">{{ eventProp.location }}</p>
     <p class="p-1">@ {{ eventProp.startDate.toLocaleString() }}</p>
-    <!-- <button v-if="account.id == eventProp.creator.id" class="btn btn-danger mt-3"  @click="removeEvent()"   title="remove event">Cancel Event</button> -->
-    <!-- <i v-if="account.id == eventProp.creatorId" @click="removeEvent()" role="button" title="remove event"
-                    class="fs-1 text-danger mdi mdi-delete-circle"></i> -->
+    
  </div>
+ 
+ <div v-else class="m-4 coolBg">
+  <!-- NOTE do the router link after making the details page:) and later on make this a background img -->
+  <router-link :to="{name: 'Event', params: {eventId: eventProp.id}}" >
+    <img class="img-fluid" src="https://media.istockphoto.com/id/1227115202/photo/a-red-stamp-on-a-white-background-cancelled.webp?b=1&s=170667a&w=0&k=20&c=RPueqU4VVfs98bOCqlCPifC7EcKze6CksprK4o_K3no=" alt="">
+  </router-link>
+    <p class="p-1"><b>{{ eventProp.name }}</b></p>
+    <p class="p-1">{{ eventProp.location }}</p>
+    <p class="p-1">@ {{ eventProp.startDate.toLocaleString() }}</p>
+    
+ </div>
+
+
+
 </template>
 
 

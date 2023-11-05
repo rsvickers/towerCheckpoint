@@ -3,13 +3,13 @@ import { Schema } from "mongoose";
 export const TowerEventSchema = new Schema(
     {
         creatorId: { type: Schema.Types.ObjectId, ref: 'Account', required: true },
-        name: { type: String, required: true, maxLength: 500 },
-        description: { type: String, required: true, maxLength: 500 },
-        coverImg: { type: String, required: true, maxLength: 500 },
-        location: { type: String, required: true, maxLength: 500 },
-        capacity: { type: Number, required: true, max: 500 },
+        name: { type: String, required: true, maxLength: 50000 },
+        description: { type: String, required: true, maxLength: 50000 },
+        coverImg: { type: String, required: true, maxLength: 50000 },
+        location: { type: String, required: true, maxLength: 50000 },
+        capacity: { type: Number, required: true, max: 50000 },
         startDate: { type: Date, required: true },
-        isCanceled: { type: Boolean, required: true, default: false },
+        isCanceled: { type: Boolean, },
         type: { type: String, enum: ['concert', 'convention', 'sport', 'digital'] }
     },
     {
