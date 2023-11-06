@@ -1,17 +1,27 @@
 <template>
   <div class="container-fluid">
     <section class="row">
-      <div class="col-12 ">
-        
-      </div>
-      <div class="col-12 p-4">
-        <div class="p-3 d-flex justify-content-start">
-          <button class="btn btn-secondary mx-1" @click="changeType('')">All</button>
-          <button class="btn btn-secondary mx-1" @click="changeType(types)" v-for="types in types" :key="types" >{{ types }}</button>
+      
+      <div class="col-12 p-3">
+        <div class="p-3 d-none d-md-flex ">
+          <button class="btn btn-secondary mx-2" @click="changeType('')">All</button>
+          <button class="btn btn-secondary mx-2" @click="changeType(types)" v-for="types in types" :key="types" >{{ types }}</button>
         </div>
       </div>
     </section>
     <section class="row">
+      
+      <div class="col-md-12 p-3">
+      <div class="dropdown d-block d-md-none" >
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Dropdown button
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a @click="changeType('')" class="dropdown-item">All</a>
+    <a  @click="changeType(types)" class="dropdown-item" v-for="types in types" :key="types" >{{ types }}</a>
+  </div>
+</div>
+</div>
 
       <div v-for="event in events" :key="event.id" class="col-md-3 col-12">
         <EventCardComponent :eventProp="event"/>

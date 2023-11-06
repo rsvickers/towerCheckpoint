@@ -3,15 +3,15 @@ import { BadRequest, Forbidden } from "../utils/Errors.js"
 import { towerEventsService } from "./TowerEventsService.js"
 
 class TicketsService {
-    async getMyTickets(userId) {
-        const tickets = await dbContext.Tickets.find({ accountId: userId })
-            .populate({
-                path: 'event',
-                populate: {
-                    path: 'ticketCount'
-                }
-            })
-        // .populate('event')
+    async getMyTickets(accountId) {
+        const tickets = await dbContext.Tickets.find({ accountId }).populate('event')
+        // .populate({
+        //     path: 'event',
+        //     populate: {
+        //         path: 'ticketCount'
+        //     }
+        // })
+
         return tickets
     }
     async createTicket(ticketData) {

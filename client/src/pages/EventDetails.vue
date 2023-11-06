@@ -3,17 +3,17 @@
     
     <section v-if="event" class="coolBg row mt-4">
         
-        <div v-if="event.creatorId == account.id" class="col-12 text-end p-3">
+        <div v-if="event.creatorId == account.id" class="col-12 col-md-4 text-end p-3">
             <button @click="cancelEvent()" class="btn btn-danger">Cancel Event</button>
         </div>
-        <div v-if="!event.isCanceled" class="col-4 p-4">
-            <!-- TODO work on disabling if canceled -->
+        <div v-if="!event.isCanceled" class="col-12 col-md-4 p-4">
+            
             <img  class="cover-img" :src="event.coverImg" alt="">
         </div>
         <div v-else>
             <img class="img-fluid" src="https://media.istockphoto.com/id/1227115202/photo/a-red-stamp-on-a-white-background-cancelled.webp?b=1&s=170667a&w=0&k=20&c=RPueqU4VVfs98bOCqlCPifC7EcKze6CksprK4o_K3no="  >
         </div>
-        <div class="col-8 p-4">
+        <div class="col-10 p-4">
         <div class="d-flex justify-content-between">
             <h3 class="p-2">{{ event.name }}</h3>
             <h4 class="p-2"> {{ event.startDate.toDateString() }}</h4>
@@ -28,7 +28,7 @@
             <div v-if="ticketsLeft(event)" class="d-flex justify-content-between">
                 <p ><b>   {{ event.capacity - event.ticketCount  }} </b> Tickets Left</p>
                 
-                <button :disabled="buttonDisabled(event, account)" @click="getTicketForEvent()" class="btn btn-warning">Grab a Ticket! <i class="mdi mdi-ticket"></i> </button>
+                <button :disabled="!account.id || event.isCanceled" @click="getTicketForEvent()" class="btn btn-warning">Grab a Ticket! <i class="mdi mdi-ticket"></i> </button>
                 
             </div>
             <div v-else>
@@ -46,29 +46,32 @@
         </div>
     </section>
         
-    <div class="container">
+   
      
         <section class="row mt-5  coolBg">
-            <form @submit.prevent="createComment()">
-        <div class="mb-3">
-            <label for="body" class="form-label text-light">Join the conversation</label>
-                <textarea v-model="editable.body" class="form-control"  placeholder="Tell the people..." id="description" maxlength="200" rows="3"></textarea>
-            </div>
-            <div class="text-end">
-                <button type="submit" class="btn btn-success mb-4">post comment</button>
-            </div>
-        </form>
-            <div v-for="comment in comments" :key="comment.id" class="col-12 bg-secondary d-flex justify-content-evenly align-items-center mb-5">
-                <img class="rounded-circle avatar p-3" :src="comment.creator.picture" :title="comment.creator.name" alt="">
-                <div class="text-light  p-3 ">
-                    <h5>{{ comment.creator.name }}</h5>
-                    <p>{{ comment.body }}</p>
-                </div >
-                <div v-if="comment.creatorId == account.id" >
-                    <button @click="deleteComment(comment.id)" class="btn btn-danger" title="delete comment">🗑️</button>
-                </div>
-            </div>
+            <div class="col-10">
 
+                <form @submit.prevent="createComment()">
+                    <div class="mb-3 ">
+                        <label for="body" class="form-label text-light">Join the conversation</label>
+                        <textarea v-model="editable.body" class="form-control"  placeholder="Tell the people..." id="description" maxlength="200" rows="3"></textarea>
+                    </div>
+                    <div class="text-end ">
+                        <button type="submit" class="btn btn-success mb-4">post comment</button>
+                    </div>
+                </form>
+                <div v-for="comment in comments" :key="comment.id" class="bg-secondary d-flex justify-content-evenly align-items-center mb-5">
+                    <img class="rounded-circle avatar p-3" :src="comment.creator.picture" :title="comment.creator.name" alt="">
+                    <div class="text-light  p-3 ">
+                        <h5>{{ comment.creator.name }}</h5>
+                        <p>{{ comment.body }}</p>
+                    </div >
+                    <div v-if="comment.creatorId == account.id" >
+                        <button @click="deleteComment(comment.id)" class="btn btn-danger" title="delete comment">🗑️</button>
+                    </div>
+                </div>
+                
+            </div>
 
             
             <!-- <div>
@@ -86,7 +89,7 @@
             </div> -->
         </section>
     </div>
-   </div>
+   
 </template>
 
 
@@ -227,7 +230,7 @@ export default {
 
 .cover-img {
     height: 35dvh;
-    width: 100%;
+    width: 85%;
     object-fit: cover;
     object-position: center;
     

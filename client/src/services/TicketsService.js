@@ -12,6 +12,11 @@ class TicketsService {
         AppState.tickets.push(new Ticket(res.data))
     }
 
+    async getMyEventTickets(){
+        const res = await api.get('account/tickets')
+        logger.log('Got ticket for my account', res.data)
+        AppState.myTickets = res.data.map((myTicketPOJO) => new Ticket(myTicketPOJO))
+    }
     async getTicketByUserId() {
         const res = await api.get('account/tickets')
         logger.log('got my ticket', res.data)
@@ -22,6 +27,19 @@ class TicketsService {
     logger.log('tickets Service, getting tickets hopefully', res.data)
     AppState.tickets = res.data.map((ticketPOJO) => new Ticket(ticketPOJO))
    }
+
+async refundTicket(ticketId){
+    await api.delete(`api/tickets/${ticketId}`)
+    AppState.myTickets = AppState.myTickets.filter((ticket) => ticket.id != ticketId)
+
 }
+
+clearTicketData() {
+    AppState.myTickets = null
+}
+
+}
+
+
 
 export const ticketsService = new TicketsService()

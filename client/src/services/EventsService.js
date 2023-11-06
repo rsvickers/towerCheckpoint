@@ -3,12 +3,22 @@ import { Event } from "../models/Event.js"
 import { logger } from "../utils/Logger.js"
 import { api } from "./AxiosService"
 
-class EventsService {
 
+class EventsService {
+    
     async getEvents() {
         const res = await api.get('api/events')
         logger.log('got events', res.data)
         AppState.events = res.data.map((eventPOJO) => new Event(eventPOJO))
+    }
+    async getMyEvents(){
+    const res =  await api.get('api/events')
+    
+    const myEvent = res.data.filter(myEvent => AppState.account.id == myEvent.creatorId)
+    logger.log('eventsServices', myEvent)
+    AppState.myEvents = myEvent.map((myEventPojo) => new Event(myEventPojo))
+    
+    
     }
 
     async getEventById(eventId){
@@ -23,6 +33,7 @@ class EventsService {
         logger.log('created Album', res.data)
         const newEvent = new Event(res.data)
         AppState.events.push(newEvent)
+        AppState.myEvents.push(newEvent)
         return newEvent
     }
 
@@ -38,7 +49,7 @@ class EventsService {
         logger.log('removing event', res.data)
         this.clearData()
     }
- 
+
     
     clearData() {
         AppState.activeEvent = null
