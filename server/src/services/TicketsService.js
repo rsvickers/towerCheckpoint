@@ -3,16 +3,11 @@ import { BadRequest, Forbidden } from "../utils/Errors.js"
 import { towerEventsService } from "./TowerEventsService.js"
 
 class TicketsService {
-    async getMyTickets(accountId) {
-        const tickets = await dbContext.Tickets.find({ accountId }).populate('event')
-        // .populate({
-        //     path: 'event',
-        //     populate: {
-        //         path: 'ticketCount'
-        //     }
-        // })
+    async getMyTickets(userId) {
+        const ticket = await dbContext.Tickets.find({ accountId: userId }).populate('event')
+        // .populate({ path: 'event', populate: { path: 'ticketCount' } })
 
-        return tickets
+        return ticket
     }
     async createTicket(ticketData) {
         const event = await towerEventsService.getEventById(ticketData.eventId)
@@ -30,6 +25,7 @@ class TicketsService {
     async getEventTickets(eventId) {
         const tickets = await dbContext.Tickets.find({ eventId: eventId })
             .populate('profile', 'name picture')
+            .populate('event')
         return tickets
     }
     async removeTicket(ticketId, userId) {

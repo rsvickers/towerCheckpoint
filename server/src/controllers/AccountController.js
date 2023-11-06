@@ -11,20 +11,20 @@ export class AccountController extends BaseController {
       .get('', this.getUserAccount)
       .get('/tickets', this.getMyTickets)
   }
-  async getMyTickets(request, response, next) {
-    try {
-      const accountId = request.userInfo.id
-      const tickets = await ticketsService.getMyTickets(accountId)
-      return response.send(tickets)
-    } catch (error) {
-      next(error)
-    }
-  }
 
   async getUserAccount(req, res, next) {
     try {
       const account = await accountService.getAccount(req.userInfo)
       res.send(account)
+    } catch (error) {
+      next(error)
+    }
+  }
+  async getMyTickets(request, response, next) {
+    try {
+      const userId = request.userInfo.id
+      const ticket = await ticketsService.getMyTickets(userId)
+      return response.send(ticket)
     } catch (error) {
       next(error)
     }
